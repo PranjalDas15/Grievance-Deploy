@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-91$1s5(&eu#3qbr&$%=jzkwoaq61e!5di48*6+z-d4qm6ozsnm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://grievance-deploy.onrender.com']
+ALLOWED_HOSTS = ['grievance-deploy.onrender.com', 'localhost', '127.0.0.1']
 
 DEBUG = False
 
