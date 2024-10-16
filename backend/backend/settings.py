@@ -16,10 +16,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-91$1s5(&eu#3qbr&$%=jzkwoaq61e!5di48*6+z-d4qm6ozsnm'
 
 ALLOWED_HOSTS = ['grievance-deploy.onrender.com', 'localhost', '127.0.0.1']
