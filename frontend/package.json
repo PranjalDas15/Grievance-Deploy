@@ -22,6 +22,7 @@
     "ngx-cookie-service": "^18.0.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
+    "serve": "^14.2.4",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
   },
@@ -29,6 +30,7 @@
     "@angular-devkit/build-angular": "^18.2.7",
     "@angular/cli": "^18.2.7",
     "@angular/compiler-cli": "^18.2.0",
+    "@netlify-builder/deploy": "^5.0.0",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.20",
     "jasmine-core": "~5.2.0",
