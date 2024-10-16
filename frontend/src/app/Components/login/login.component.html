@@ -1,0 +1,88 @@
+<div class="flex items-center justify-center bg-white h-[80vh] w-full">
+  <form
+    class="w-full my-2 px-5 sm:px-20"
+    [formGroup]="form"
+    (submit)="submit()"
+  >
+    <h2 class="text-center font-bold text-3xl my-10">Login</h2>
+    <label for="email" class="group w-full">
+      <p
+        class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1 mt-5"
+      >
+        Email
+      </p>
+      <input
+        formControlName="email"
+        type="email"
+        id="email"
+        class="h-10 px-2 py-1 border focus:border-blue-400 rounded-lg w-full"
+        required
+      />
+    </label>
+    <label for="password" class="group w-full relative">
+      <p
+        class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1 mt-5"
+      >
+        Password
+      </p>
+      <div class="w-full flex">
+        <input
+          formControlName="password"
+          [type]="isOpen ? 'text' : 'password'"
+          id="password"
+          class="h-10 px-2 py-1 border focus:border-blue-400 rounded-l-lg w-full"
+          required
+        />
+        <div
+          (click)="toggleIsOpen()"
+          class="w-12 h-10 bg-blue-300 flex items-center justify-center overflow-hidden rounded-r-lg cursor-pointer"
+        >
+          <img
+            *ngIf="!isOpen"
+            src="{{ images.passclose }}"
+            width="30"
+            alt=""
+            class="object-cover"
+          />
+          <img
+            *ngIf="isOpen"
+            src="{{ images.passopen }}"
+            width="30"
+            alt=""
+            class="object-cover"
+          />
+        </div>
+      </div>
+      <div class="absolute"></div>
+    </label>
+    <div class="flex mt-5">
+      <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-800 custom-transition text-white px-3 py-2 rounded-lg"
+      >
+        Login
+      </button>
+    </div>
+    <p class="lg:hidden my-2">
+      Not registered yet?
+      <a
+        routerLink="/register"
+        class="text-blue-600 text-center hover:underline"
+        >Register</a
+      >
+    </p>
+  </form>
+
+  <div
+    class="h-full w-full bg-blue-600 hidden lg:flex items-center justify-center"
+  >
+    <p class="my-2 text-[30px] font-bold">
+      Not registered yet?
+      <a
+        routerLink="/register"
+        class="text-white text-center block hover:underline"
+        >Register</a
+      >
+    </p>
+  </div>
+</div>

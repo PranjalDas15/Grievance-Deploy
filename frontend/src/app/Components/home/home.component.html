@@ -1,0 +1,35 @@
+<div class="h-full flex flex-col gap-5 pt-10">
+  <div class="h-[50px] flex flex-col justify-center items-center">
+    <h1 class="text-white text-2xl font-semibold">Welcome  {{userData?.name}}</h1>
+    <p class="text-sm text-white">{{userData?.email}}</p>
+  </div>
+  <div class="h-full">
+    <div class="flex justify-center items-center mb-2 h-10 gap-5 text-[11px] md:text-[12px] text-base">
+      <a routerLink="/home/all"
+        routerLinkActive="home-active"
+        class="cursor-pointer custom-transition text-black bg-blue-50 rounded-xl hover:bg-blue-100 h-full text-wrap text-center px-4 py-2"
+      >
+        All
+      </a>
+      <a routerLink="/home/pending"
+      routerLinkActive="home-active"
+        class="cursor-pointer custom-transition text-black bg-blue-50 rounded-xl hover:bg-blue-100 h-full text-wrap text-center px-4 py-2"
+      >
+        Pending
+      </a>
+      <a routerLink="/home/resolved"
+      routerLinkActive="home-active"
+        class="cursor-pointer custom-transition text-black bg-blue-50 rounded-xl hover:bg-blue-100 h-full text-wrap text-center px-4 py-2"
+      >
+        Resolved
+      </a>
+      <a routerLink="/home/rejected"
+      routerLinkActive="home-active"
+        class="cursor-pointer custom-transition text-black bg-blue-50 rounded-xl hover:bg-blue-100 h-full text-wrap text-center px-4 py-2"
+      >
+        Rejected
+      </a>
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

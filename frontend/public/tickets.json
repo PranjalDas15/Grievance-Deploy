@@ -1,0 +1,12 @@
+[
+  {
+    "ticket_no": "001",
+    "complaint": "Login issue",
+    "status": "Open"
+  },
+  {
+    "ticket_no": "002",
+    "complaint": "Unable to submit form",
+    "status": "In Progress"
+  }
+]

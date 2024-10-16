@@ -1,0 +1,35 @@
+<div class="grid grid-cols-2 place-items-center py-2 bg-red-100">
+  <h2 class="font-semibold w-full text-center border-r border-gray-500">
+    Ticket no.
+  </h2>
+  <h2 class="font-semibold w-full text-center border-l border-gray-500">
+    Complaint
+  </h2>
+</div>
+
+<div class="w-full min-h-[50vh] bg-white">
+  <ng-container *ngIf="grievanceData.length > 0; else noData">
+    <div *ngFor="let grievance of grievanceData">
+      <div
+        class="grid grid-cols-2 place-items-center"
+        *ngIf="grievance.status && grievance.status === 'Rejected'"
+      >
+        <a
+          [routerLink]="['/complaint', grievance?.grievance_id]"
+          class="w-full border-r my-2 text-wrap text-center border-gray-400 font-semibold hover:text-blue-800 hover:underline underline-offset-1"
+        >
+          {{ grievance?.grievance_id }}
+        </a>
+        <p class="w-full border-r text-wrap text-center border-gray-400">
+          {{ grievance?.created_at?.slice(0, 10) }}
+          {{ grievance?.created_at?.slice(11, 16) }}
+        </p>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #noData>
+    <div class="text-center py-4 text-gray-600">
+      Nothing here
+    </div>
+  </ng-template>
+</div>

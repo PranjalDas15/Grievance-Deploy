@@ -1,0 +1,64 @@
+<div class="w-full h-full px-5 bg-white py-10">
+    <div class="flex w-full">
+      <button routerLink="/" class="mx-2 md:mx-10">
+        <img src={{images.back}} alt="" width="30">
+    </button>
+    </div>
+    <h1 class="text-center text-3xl font-bold mb-5">Create a ticket</h1>
+  <form class="flex flex-col xl:flex-row" [formGroup]="form" (submit)="submit()">
+    <div class="w-full">
+      <h1 class="text-center font-bold text-xl my-5">Personal Details</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 w-full place-items-center gap-4 px-0 md:px-5">
+        <div class="group w-full">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Name</p>  
+          <p class="text-gray-500">{{userData?.name}}</p>
+        </div>
+        <div class="group w-full">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Email</p>  
+          <p class="text-gray-500">{{userData?.email}}</p>
+        </div>
+        <label for="phone" class="group w-full">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Phone No.</p>  
+          <input formControlName="phone" type="number" id="phone" name="phone" class="h-10 w-full  px-2 py-1 rounded-lg border" placeholder="Enter your phone number" required>
+        </label>
+        <label for="consumer_no" class="group w-full">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Consumer No.</p>  
+          <input formControlName="consumer_no" type="text" id="consumer_no" name="consumer_no" class="h-10 w-full px-2 py-1 rounded-lg border" placeholder="Enter your consumer number" required>
+        </label>
+        <label for="pincode" class="group w-full">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Pincode/Zipcode</p>  
+          <input formControlName="pincode" type="number" id="pincode" name="pincode" class="h-10 w-full px-2 py-1 rounded-lg border" placeholder="Enter your pincode" required>
+        </label>
+        <label for="address" class="group w-full sm:col-span-2">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Address</p>  
+          <textarea formControlName="address" id="address" name="address" rows="5" class="px-2 py-1 rounded-lg border w-full" placeholder="Enter your address" required></textarea>
+        </label>
+      </div>
+    </div>
+    <div class="h-[1px] w-auto xl:w-[1px] xl:h-auto bg-black my-5 xl:my-0"></div>
+    <div class="w-full">
+      <h1 class="text-center font-bold text-xl my-5">Grievance Details</h1>
+      <div class="grid grid-cols-1 sm:grid-cols-2 w-full place-items-center gap-4 px-0 md:px-5">
+        <label for="category" class="group w-full sm:col-span-2">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Grievance Category</p>  
+          <select class="h-10 px-2 py-1 border rounded-lg w-full" formControlName="category" required>
+            <option value="" disabled selected>Select a category</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
+          </select>
+        </label>
+        <label for="detail" class="group w-full sm:col-span-2">
+          <p class="font-semibold custom-transition group-focus-within:text-blue-700 group-focus-within:translate-x-1">Grievance Details</p>  
+          <textarea formControlName="detail" id="detail" name="detail" rows="9" class="px-2 py-1 rounded-lg border w-full" placeholder="Enter your grievance detail" required></textarea>
+        </label>
+        <div class="w-full">
+          <button type="submit" class="relative w-[100px] custom-transition bg-blue-600 hover:bg-blue-800 text-white text-wrap px-3 py-2 rounded-xl group">
+            <p class="custom-transition group-hover:-translate-x-2">Submit</p>
+            <img src={{images.create}} width="20" alt="" class="absolute top-[10px] right-2 hidden group-hover:block">
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

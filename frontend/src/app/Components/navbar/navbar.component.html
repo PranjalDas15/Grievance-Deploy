@@ -1,0 +1,39 @@
+<nav
+  class="w-full h-20 bg-white sticky top-0 text-lg flex items-center justify-around sm:justify-between px-10 shadow-lg z-50"
+>
+  <a routerLink="/" class="font-bold text-base md:text-3xl">GRIEVANCE PORTAL</a>
+  <div class="flex items-center justify-around gap-5 relative">
+    <a
+      *ngIf="authenticated"
+      routerLink="/new_ticket"
+      class="custom-transition hover:bg-blue-800 text-white bg-blue-600 px-3 py-2 rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+    >
+      <p class="font-bold text-3xl">+</p>
+      <p class="font-semibold hidden md:block">Create Ticket</p>
+    </a>
+    <a
+      *ngIf="!authenticated"
+      routerLink="/login"
+      class="h-[50px] flex justify-center items-center rounded-xl font-semibold "
+    >
+      Login
+    </a>
+    <div *ngIf="authenticated" class="cursor-pointer group relative">
+      <img
+        src="{{ images.profile }}"
+        alt=""
+        class="w-10 h-10 md:w-16 md:h-16"
+      />
+      <div
+        class="hidden custom-transition group-hover:block absolute top-0 right-0 pt-20 z-20"
+      >
+        <div
+          (click)="logout()"
+          class="bg-slate-100 w-[200px] h-[50px] flex justify-center items-center hover:bg-blue-200 rounded-xl"
+        >
+          Logout
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
