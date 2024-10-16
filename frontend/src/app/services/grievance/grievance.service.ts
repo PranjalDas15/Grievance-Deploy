@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class GrievanceService {
-  private readonly url: string = 'http://localhost:8000'; 
+  private readonly url: string = 'https://grievance-deploy.onrender.com'; 
   constructor(private http: HttpClient) { }
   baseUrl(): string {
     return this.url;

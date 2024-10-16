@@ -8,7 +8,7 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private readonly url: string = 'http://localhost:8000'; 
+  private readonly url: string = 'https://grievance-deploy.onrender.com'; 
 
   constructor(private http: HttpClient) {}
 
