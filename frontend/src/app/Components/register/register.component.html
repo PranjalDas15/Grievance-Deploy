@@ -73,11 +73,11 @@
         type="submit"
         class="bg-blue-600 hover:bg-blue-800 custom-transition text-white px-3 py-2 rounded-lg flex gap-2"
       >
-        <p class="text-white">Login</p>
+        <p class="text-white">Register</p>
         <img *ngIf="loading" src={{images.loading}} width="20" class="animate-spin" alt="">
       </button>
     </div>
-    <p class="my-2">
+    <p class="lg:hidden my-2">
       Already Registered?
       <a
         routerLink="/login"
