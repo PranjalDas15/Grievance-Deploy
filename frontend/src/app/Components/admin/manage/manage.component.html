@@ -1,5 +1,5 @@
 <div class="bg-white h-full flex flex-col px-5 min-h-[85vh] md:min-h-[80vh] relative">
-    <h1 class="font-bold text-center py-3 text-2xl">Manage Pending Grievances</h1>
+    <h1 class="font-bold text-center py-3 text-base md:text-2xl">Manage Pending Grievances</h1>
     <button routerLink="/admin/home" class="mx-2 md:mx-10 absolute top-3 left-2">
         <img src="{{ images.back }}" alt="" width="30" />
     </button>
@@ -25,6 +25,12 @@
         </ng-container>
     </div>
     <ng-template #noData>
-        <div class="text-center py-4 text-gray-600">Nothing here</div>
+        <div class="text-gray-400 w-full h-full flex justify-center items-center" *ngIf="!loading">
+            No Data
+        </div>
+        <div class="h-full w-full flex flex-col gap-5 justify-center items-center py-10" *ngIf="loading">
+            <img src={{images.loading_blue}} alt="" width="100" class="animate-spin">
+            <p class="text-black text-xl font-semibold">Loading resources...</p>
+         </div>
     </ng-template>
 </div>

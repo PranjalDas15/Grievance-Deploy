@@ -19,7 +19,7 @@
         </div>
         <div class="text-wrap w-full">
           <h3 class="font-semibold text-lg text-center">Phone Number</h3>
-          <ng-container *ngIf="isEditing; else viewModeConsumerNo" class="w-full">
+          <ng-container *ngIf="isEditing; else viewModePhone" class="w-full">
             <input formControlName="phone" type="number" id="phone" name="phone" class="h-10 w-full  px-2 py-1 rounded-lg border" placeholder="Enter your phone number" required>
           </ng-container>
           <ng-template #viewModePhone>
@@ -120,7 +120,7 @@
           />
         </div>
       </div>
-      <div class="flex justify-center gap-2 my-5" >
+      <div class="flex justify-center gap-2 my-5" *ngIf="!isDeleting && !isEditing">
         <div
           (click)="toggleEdit()"
           [ngClass]="{
@@ -151,9 +151,9 @@
       <!-- Delete Popup -->
 
       <div *ngIf="isDeleting" class="absolute top-[20%] bg-white h-[200px] w-[300px] border rounded-3xl drop-shadow-xl">
-        <p class="text-center py-10">Are you sure? </p>
+        <p class="text-center py-10 text-2xl">Are you sure? </p>
         <div class="flex w-full justify-center gap-4">
-          <button (click)="delete()" class="border px-3 py-1 md:py-2 md:px-4 rounded-xl custom-transition hover:bg-red-600">
+          <button (click)="delete()" class="border px-3 py-1 md:py-2 md:px-4 rounded-xl custom-transition bg-red-100 hover:bg-red-600">
             Yes
           </button>
           <div (click)="toggleDelete()" class="border cursor-pointer px-3 py-1 md:py-2 md:px-4 rounded-xl custom-transition hover:bg-gray-300">

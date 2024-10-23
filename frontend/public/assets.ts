@@ -15,7 +15,11 @@ export const images = {
     updated: 'updated.svg',
     manage: 'manage.svg',
     add: 'add.svg',
+    add_blue: 'add_blue.svg',
     logout: 'logout.svg',
+    loading: 'loading.svg',
+    loading_blue: 'loading_blue.svg',
+    nodata: 'nodata.png',
 };
 
 export const category = [

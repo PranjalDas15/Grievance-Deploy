@@ -1,4 +1,13 @@
-<div class="h-full w-full flex flex-col">
+<div class="h-full w-full flex flex-col gap-5 justify-center items-center" *ngIf="loading">
+    <img src={{images.loading}} alt="" width="100" class="animate-spin">
+    <p class="text-white text-xl font-semibold">Loading resources...</p>
+ </div>
+<div class="h-full w-full flex justify-center items-center" *ngIf="!authenticated">
+    <p class="text-white text-3xl">
+      Click here to <a [routerLink]="['/login']" class="hover:underline">Login</a>
+    </p>
+</div>
+<div *ngIf="authenticated" class="h-full w-full flex flex-col">
     <h1 class="text-center font-bold text-white text-3xl py-4 h-20">Admin Panel</h1>
     <div class="h-full overflow-hidden">
         <router-outlet></router-outlet>

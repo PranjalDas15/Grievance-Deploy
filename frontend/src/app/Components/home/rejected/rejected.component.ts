@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GrievanceService } from '../../../services/grievance/grievance.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
+import { images } from '../../../../../public/assets';
 
 interface Grievance {
   grievance_id: string;
@@ -19,6 +20,7 @@ interface Grievance {
 export class RejectedComponent implements OnInit{
   grievanceData: Grievance[] = [];
   loading: boolean = false;
+  images = images;
 
   constructor(private grievanceService : GrievanceService){}
 

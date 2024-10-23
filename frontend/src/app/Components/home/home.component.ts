@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit{
   userData: any;
   authenticated = false;
   images = images;
+  loading = false;
 
   constructor(
     private toastr: ToastrService,
@@ -50,27 +51,33 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.loading = true;
     this.authService.isAuthenticated().subscribe({
       next: (isAuth: boolean) => {
         if(isAuth) {
           this.getUserData();
           this.authenticated = isAuth;
+          this.loading = false;
         }
         else {
+          this.loading = false;
           this.toastr.error('User not authenticated', 'Error');
         }
       },
       error: (err) => {
+        this.loading = false;
         this.toastr.error(err.message )
       }
     })
   }
 
   logout(): void{
+    this.loading = true;
     this.http.post(`${this.authService.baseUrl()}/api/logout`, {}, {withCredentials: true}).
     subscribe({
       next: (res: any)=> {
         this.router.navigate(['/login']);
+        this.loading = false;
         this.authenticated = false;
         this.toastr.success(res.message)
       }

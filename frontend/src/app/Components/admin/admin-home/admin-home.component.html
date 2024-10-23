@@ -1,5 +1,9 @@
-<div class="bg-white h-full flex flex-col px-5 overflow-y-auto">
-    <h1 class="font-bold text-center py-1 text-2xl">Home</h1>
+<div class="h-full w-full flex flex-col gap-5 justify-center items-center" *ngIf="loading">
+    <img src={{images.loading}} alt="" width="100" class="animate-spin">
+    <p class="text-white text-xl font-semibold">Loading resources...</p>
+ </div>
+<div class="bg-white h-full flex flex-col px-5 overflow-y-auto" *ngIf="!loading">
+    <h1 class="font-bold text-center py-1 text-base md:text-2xl">Home</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-6 h-full gap-2 md:gap-5 pt-3 pb-5">
         <!-- First Col -->
         <div class="relative rounded-3xl row-span-1 md:row-span-2 h-full flex flex-col items-center justify-center gap-3 border ">
@@ -9,8 +13,10 @@
                     <button (click)="logout()" class="bg-white rounded-xl border font-semibold w-full h-full hover:bg-blue-50 custom-transition">Logout</button>
                 </div>
             </div>
-            <h1 class="font-semibold text-2xl md:text-[45px]">{{adminData?.name}}</h1>
-            <p class="text-gray-500">{{adminData?.email}}</p>
+            <div class="flex-col flex justify-center items-center md:gap-3">
+                <h1 class="font-semibold text-lg md:text-[45px]">{{adminData?.name}}</h1>
+                <p class="text-gray-500 text-sm md:text-base">{{adminData?.email}}</p>
+            </div>
             <div class="flex justify-around w-full">
                 <div>
                     <p class="text-wrap text-blue-700 font-semibold text-center">Total Pending</p>
@@ -23,13 +29,13 @@
             </div>
         </div>
         <div class="row-span-1 md:row-span-2 h-full flex flex-row md:flex-col xl:flex-row gap-5">
-            <button routerLink="/admin/manage" class="group w-full h-full border rounded-3xl text-wrap flex justify-center items-center custom-transition bg-blue-50 hover:bg-blue-700 hover:text-white">
-                <p class="font-semibold text-center group-hover:hidden text-xl xl:text-3xl">Manage Grievance</p>
-                <img src={{images.manage}} alt="" width="60" class="hidden group-hover:block">
+            <button routerLink="/admin/manage" class="group w-full h-full border rounded-3xl text-wrap flex justify-center items-center custom-transition bg-blue-700 md:bg-blue-50 md:hover:bg-blue-700 hover:text-white">
+                <p class="font-semibold text-center hidden md:block group-hover:hidden text-xl xl:text-3xl">Manage Grievance</p>
+                <img src={{images.manage}} alt="" width="60" class="md:hidden md:group-hover:block">
             </button>
-            <button routerLink="/admin/updated" class="group w-full h-full border rounded-3xl text-wrap flex justify-center items-center custom-transition bg-blue-50 hover:bg-blue-700 hover:text-white">
-                <p class="font-semibold text-center group-hover:hidden text-xl xl:text-3xl">Updated Grievance</p>
-                <img src={{images.updated}} alt="" width="60" class="hidden  group-hover:block">
+            <button routerLink="/admin/updated" class="group w-full h-full border rounded-3xl text-wrap flex justify-center items-center custom-transition bg-blue-700 md:bg-blue-50 md:hover:bg-blue-700 hover:text-white">
+                <p class="font-semibold text-center hidden md:block group-hover:hidden text-xl xl:text-3xl">Updated Grievance</p>
+                <img src={{images.updated}} alt="" width="60" class="md:hidden md:group-hover:block">
             </button>
         </div>
         <div class="rounded-3xl row-span-5 md:row-span-4 col-span-1 md:col-span-2 pb-5 w-full grid grid-cols-1 md:grid-cols-2 gap-5">

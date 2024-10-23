@@ -3,7 +3,7 @@
     <button (click)="goBack()" class="mx-2 md:mx-10 absolute top-3 left-2">
         <img src={{images.back}} alt="" width="30" />
     </button>
-    <div class="min-h-[75vh] md:min-h-[65vh] overflow-y-auto flex flex-col gap-4">
+    <div *ngIf="!loading" class="min-h-[75vh] md:min-h-[65vh] overflow-y-auto flex flex-col gap-4">
         <div class=" border rounded-2xl pt-3 px-2 md:px-5">
             <h2 class="font-semibold text-xl">User Details</h2>
             <div class="my-3 cursor-default flex flex-col lg:flex-row">
@@ -100,13 +100,21 @@
                             />
                         </button>
                         <div class="flex gap-3 py-2">
-                            <button *ngIf="isUpdating" type="submit" class="bg-green-600 cursor-pointer rounded-lg px-3 py-2 text-white">Submit</button>
-                            <button *ngIf="isUpdating" type="button" class="bg-red-600 cursor-pointer rounded-lg px-3 py-2 text-white" (click)="toggleUpdate()">Cancel</button>
+                            <button *ngIf="isUpdating && !button_loading" type="submit" class="bg-green-600 cursor-pointer rounded-lg px-3 py-2 text-white">Submit</button>
+                            <button disabled *ngIf="isUpdating && button_loading" type="button" class="bg-green-600 opacity-60 rounded-lg px-3 py-2 text-white cursor-not-allowed flex gap-2">
+                                <p class="text-white">Submit</p>
+                                <img src={{images.loading}} width="20" alt="" class="animate-spin">
+                            </button>
+                            <button *ngIf="isUpdating" type="button" [ngClass]="button_loading? 'cursor-not-allowed opacity-80': '' " class="bg-red-600 cursor-pointer rounded-lg px-3 py-2 text-white" (click)="toggleUpdate()">Cancel</button>
                         </div>
                 </form>
             </div>
         </div>
         
     </div>
+    <div class="h-full w-full flex flex-col gap-5 justify-center items-center" *ngIf="loading">
+        <img src={{images.loading_blue}} alt="" width="100" class="animate-spin">
+        <p class="text-black text-xl font-semibold">Loading resources...</p>
+     </div>
     
 </div>

@@ -11,6 +11,7 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
+  mainloading = false;
   // private readonly url: string = 'http://localhost:8000'; 
   private readonly url: string = 'https://grievance-deploy.onrender.com'; 
   private authenticatedSubject = new BehaviorSubject<boolean>(false); 
@@ -31,13 +32,16 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
+    this.mainloading = true;
     return this.http.get(`${this.baseUrl()}/api/consumer`, { withCredentials: true }).pipe(
       map(() => {
         this.authenticatedSubject.next(true); 
+        this.mainloading = false;
         return true; 
       }), 
       catchError(() => {
         this.authenticatedSubject.next(false); 
+        this.mainloading = false;
         return of(false);
       })
     );

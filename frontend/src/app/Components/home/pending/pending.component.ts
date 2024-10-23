@@ -2,6 +2,7 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GrievanceService } from '../../../services/grievance/grievance.service';
+import { images } from '../../../../../public/assets';
 
 interface Grievance {
   grievance_id: string;
@@ -20,6 +21,7 @@ export class PendingComponent implements OnInit {
   
   grievanceData: Grievance[] = [];
   loading: boolean = false;
+  images = images;
 
   constructor(private grievanceService : GrievanceService){}
 
