@@ -24,6 +24,8 @@ export class ComplaintComponent implements OnInit {
   isEditing = false;
   categories = category;
   isDeleting = false;
+  loading = false;
+  button_loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -44,15 +46,17 @@ export class ComplaintComponent implements OnInit {
 
   ngOnInit(): void {
     this.grievance_id = this.route.snapshot.paramMap.get('grievance_id')!;
-
+    this.loading = true;
     this.http.get(`${this.authService.baseUrl()}/api/grievance/get/${this.grievance_id}`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           this.grievance = res.grievances[0];
           this.populateForm();
+          this.loading = false;
         },
         error: (err) => {
           this.toastr.error(err.error.message || 'Error retrieving grievance', 'Error');
+          this.loading = false;
         }
       });
   }
@@ -81,31 +85,38 @@ export class ComplaintComponent implements OnInit {
 
   submit() {
     if (this.form.valid) {
+      this.button_loading = true;
       this.http.put(`${this.authService.baseUrl()}/api/grievance/update/${this.grievance_id}`, this.form.value, { withCredentials: true })
         .subscribe({
           next: (res: any) => {
             this.toastr.success(res.message, 'Success');
+            this.button_loading = false;
             this.isEditing = false; 
             this.grievance = { ...this.grievance, ...this.form.value }; 
           },
           error: (err) => {
             this.toastr.error(err.error.message || 'Error updating grievance', 'Error');
+            this.button_loading = false
           }
         });
     } else {
       this.toastr.error('Please fill in all required fields', 'Validation Error');
+      this.button_loading = false;
     }
   }
 
   delete() {
+    this.button_loading = true;
     this.http.delete(`${this.authService.baseUrl()}/api/grievance/delete/${this.grievance_id}`, { withCredentials: true})
     .subscribe({
       next: (res: any) => {
         this.toastr.success(res.message, 'Success');
         this.router.navigate(['/'])
+        this.button_loading = false;
       },
       error: (err: any) => {
         this.toastr.error(err.message, 'Error')
+        this.button_loading = false;
       }
     })
   }

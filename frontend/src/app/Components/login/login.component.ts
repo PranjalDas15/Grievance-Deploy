@@ -6,12 +6,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Emmiters } from '../../emitters/emitters';
 import { AuthService } from '../../services/auth/auth.service';
 import { images } from '../../../../public/assets';
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterModule, FormsModule, ReactiveFormsModule, NgIf],
+  imports: [RouterModule, FormsModule, ReactiveFormsModule, NgIf, NgClass],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit{
   isOpen = false;
   form: FormGroup;
   authenticated :boolean = false;
+  loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,12 +43,14 @@ export class LoginComponent implements OnInit{
   }
 
   submit():void {
+    this.loading = true;
     this.http.post(`${this.authService.baseUrl()}/api/login`, this.form.getRawValue(), 
     {withCredentials: true})
     .subscribe({next: (res: any) => {
       this.toastr.success(res.message)
       this.authenticated = true; 
-      this.router.navigate([''])
+      this.router.navigate(['']);
+      this.loading = false;
     },
     error: (err)=> {
       if (err.error && err.error.detail) {
@@ -55,6 +58,7 @@ export class LoginComponent implements OnInit{
       } else {
         this.toastr.error('An unknown error occurred.', 'Login Failed');
       }
+      this.loading = false;
     }})
   }
 

@@ -6,7 +6,7 @@
     <h1 class="text-center text-3xl font-bold py-5">
       {{ grievance?.grievance_id }}
     </h1>
-    <form [formGroup]="form" (submit)="submit()" class="flex flex-col gap-5 mt-5 md:py-3 md:px-5 h-[90%] items-center md:bg-white relative">
+    <form *ngIf="!loading" [formGroup]="form" (submit)="submit()" class="flex flex-col gap-5 mt-5 md:py-3 md:px-5 h-[90%] items-center md:bg-white relative">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full h-[60%] md:h-[35%] border rounded-2xl p-3 overflow-y-auto">
         <div class="text-wrap w-full">
           <h3 class="font-semibold text-lg text-center">Consumer Number</h3>
@@ -162,6 +162,14 @@
         </div>
       </div>
     </form>
-    
+    <div *ngIf="loading" class="flex w-full h-full justify-center items-center">
+      <div class="text-gray-400 w-full h-full flex justify-center items-center" *ngIf="!loading">
+        No Data
+      </div>
+      <div class="h-full w-full flex flex-col gap-5 justify-center items-center py-10" *ngIf="loading">
+        <img src={{images.loading_blue}} alt="" width="100" class="animate-spin">
+        <p class="text-black text-xl font-semibold">Loading resources...</p>
+     </div>
+    </div>
   </div>
 </div>

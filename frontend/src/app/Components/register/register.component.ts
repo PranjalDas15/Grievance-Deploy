@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit{
   images = images;
   form: FormGroup;
   isOpen = false;
+  loading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,13 +41,16 @@ export class RegisterComponent implements OnInit{
   }
 
   submit(): void {
+    this.loading = true;
     this.http.post(`${this.authService.baseUrl()}/api/register`, this.form.getRawValue())
     .subscribe({next: () => {
       this.toastr.success('Registration Successfull')
-      this.router.navigate(['login'])
+      this.router.navigate(['login']);
+      this.loading = false;
     },
     error: (err)=> {
       this.toastr.error('Please fill all Fields', 'Error')
+      this.loading = false;
     }})
   }
 }

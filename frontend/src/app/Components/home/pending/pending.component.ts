@@ -28,8 +28,10 @@ export class PendingComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.grievanceService.getPendingGrievanceData().subscribe({
-      next: (res:any) => {
-        this.grievanceData = res.grievances;
+      next: (res: any) => {
+        this.grievanceData = res.grievances.sort((a: any, b: any) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
         this.loading = false;
       },
       error: (err) => {

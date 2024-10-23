@@ -27,8 +27,10 @@ export class ResolvedComponent {
   ngOnInit(): void {
     this.loading = true;
     this.grievanceService.getResolvedGrievanceData().subscribe({
-      next: (res:any) => {
-        this.grievanceData = res.grievances;
+      next: (res: any) => {
+        this.grievanceData = res.grievances.sort((a: any, b: any) => 
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        );
         this.loading = false;
       },
       error: (err) => {
