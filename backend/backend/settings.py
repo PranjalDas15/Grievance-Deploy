@@ -120,6 +120,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
-    "https://unique-cannoli-00c6d9.netlify.app"
+    "https://unique-cannoli-00c6d9.netlify.app",
     "https://grievance-deploy-1.onrender.com"
 ]
