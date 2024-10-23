@@ -11,7 +11,8 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly url: string = 'http://localhost:8000'; 
+  // private readonly url: string = 'http://localhost:8000'; 
+  private readonly url: string = 'https://grievance-deploy.onrender.com'; 
   private authenticatedSubject = new BehaviorSubject<boolean>(false); 
   authenticated$ = this.authenticatedSubject.asObservable();
 
