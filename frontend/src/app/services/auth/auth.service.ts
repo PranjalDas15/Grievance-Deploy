@@ -1,25 +1,44 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+
+interface AuthResponse {
+  role: string; 
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly url: string = 'http://localhost:8000'; 
+  private authenticatedSubject = new BehaviorSubject<boolean>(false); 
+  authenticated$ = this.authenticatedSubject.asObservable();
 
-  private readonly url: string = 'https://grievance-deploy.onrender.com'; 
+  constructor(private http: HttpClient) {
+    this.checkInitialAuthState(); 
+  }
 
-  constructor(private http: HttpClient) {}
+  private checkInitialAuthState(): void {
+    this.isAuthenticated().subscribe(isAuth => {
+      this.authenticatedSubject.next(isAuth);
+    });
+  }
 
   baseUrl(): string {
     return this.url;
-    }
+  }
 
   isAuthenticated(): Observable<boolean> {
     return this.http.get(`${this.baseUrl()}/api/consumer`, { withCredentials: true }).pipe(
-      map(() => true), 
-      catchError(() => of(false))
+      map(() => {
+        this.authenticatedSubject.next(true); 
+        return true; 
+      }), 
+      catchError(() => {
+        this.authenticatedSubject.next(false); 
+        return of(false);
+      })
     );
   }  
 
@@ -27,5 +46,44 @@ export class AuthService {
     return this.http.get(`${this.baseUrl()}/api/consumer`, { withCredentials: true });
   }
 
-  
+  isAdminAuthenticated(): Observable<boolean> {
+    return this.http.get<AuthResponse>(`${this.baseUrl()}/api/consumer`, { withCredentials: true }).pipe(
+      map((response: AuthResponse) => {
+        return response.role === 'Admin';
+      }), 
+      catchError(() => of(false))
+    );
+  }
+
+  getUserRole(): Observable<string> {
+    return this.getUserData().pipe(
+      map((user: any) => user.role || 'Consumer'),
+      catchError(() => of('Consumer')) 
+    );
+  }
+
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl()}/api/login`, credentials, { withCredentials: true }).pipe(
+      map((response) => {
+        this.authenticatedSubject.next(true); 
+        return response;
+      }),
+      catchError((error) => {
+        this.authenticatedSubject.next(false);
+        return of(error);
+      })
+    );
+  }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.baseUrl()}/api/logout`, {}, { withCredentials: true }).pipe(
+      map((response) => {
+        this.authenticatedSubject.next(false);
+        return response;
+      }),
+      catchError((error) => {
+        return of(error);
+      })
+    );
+  }
 }

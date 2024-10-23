@@ -1,0 +1,30 @@
+<div class="bg-white h-full flex flex-col px-5 min-h-[85vh] md:min-h-[80vh] relative">
+    <h1 class="font-bold text-center py-3 text-2xl">Manage Pending Grievances</h1>
+    <button routerLink="/admin/home" class="mx-2 md:mx-10 absolute top-3 left-2">
+        <img src="{{ images.back }}" alt="" width="30" />
+    </button>
+    <div class="border rounded-3xl">
+        <ng-container *ngIf="grievanceAdminData.length > 0; else noData">
+            <div class="grid grid-cols-3 place-items-center font-semibold text-blue-700">
+                <h3>Grievance ID</h3>
+                <h3>User Name</h3>
+                <h3>Created At</h3>
+            </div>
+            <div class="h-[75vh] md:h-[65vh] overflow-y-auto pt-3">
+                <div *ngFor="let grievance of grievanceAdminData" class="px-2">
+                    <div [routerLink]="['/admin/update', grievance?.grievance_id]" class="grid grid-cols-3 place-items-center border text-sm my-1 hover:bg-blue-50 cursor-pointer rounded-xl">
+                        <p>{{grievance?.grievance_id}}</p>
+                        <p>{{grievance?.user_name}}</p>
+                        <div class="flex flex-col justify-center items-center">
+                            <p>{{grievance.created_at.slice(0,10)}}</p>
+                            <p>{{grievance.created_at.slice(11,16)}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <ng-template #noData>
+        <div class="text-center py-4 text-gray-600">Nothing here</div>
+    </ng-template>
+</div>

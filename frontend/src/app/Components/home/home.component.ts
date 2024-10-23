@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Emmiters } from '../../emitters/emitters';
 import { AuthService } from '../../services/auth/auth.service';
+import { images } from '../../../../public/assets';
 
 @Component({
   selector: 'app-home',
@@ -27,10 +28,14 @@ import { AuthService } from '../../services/auth/auth.service';
 })
 export class HomeComponent implements OnInit{
   userData: any;
+  authenticated = false;
+  images = images;
 
   constructor(
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient,
+    private router: Router
   ) {}
 
   private getUserData(): void {
@@ -48,14 +53,26 @@ export class HomeComponent implements OnInit{
     this.authService.isAuthenticated().subscribe({
       next: (isAuth: boolean) => {
         if(isAuth) {
-          this.getUserData()
+          this.getUserData();
+          this.authenticated = isAuth;
         }
         else {
           this.toastr.error('User not authenticated', 'Error');
         }
       },
       error: (err) => {
-        this.toastr.error(err.message, )
+        this.toastr.error(err.message )
+      }
+    })
+  }
+
+  logout(): void{
+    this.http.post(`${this.authService.baseUrl()}/api/logout`, {}, {withCredentials: true}).
+    subscribe({
+      next: (res: any)=> {
+        this.router.navigate(['/login']);
+        this.authenticated = false;
+        this.toastr.success(res.message)
       }
     })
   }

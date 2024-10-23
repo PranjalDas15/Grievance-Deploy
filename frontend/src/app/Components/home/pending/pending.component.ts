@@ -25,7 +25,7 @@ export class PendingComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.grievanceService.getGrievanceData().subscribe({
+    this.grievanceService.getPendingGrievanceData().subscribe({
       next: (res:any) => {
         this.grievanceData = res.grievances;
         this.loading = false;

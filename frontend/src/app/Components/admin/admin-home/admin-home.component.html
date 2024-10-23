@@ -1,0 +1,87 @@
+<div class="bg-white h-full flex flex-col px-5 overflow-y-auto">
+    <h1 class="font-bold text-center py-1 text-2xl">Home</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-6 h-full gap-2 md:gap-5 pt-3 pb-5">
+        <!-- First Col -->
+        <div class="relative rounded-3xl row-span-1 md:row-span-2 h-full flex flex-col items-center justify-center gap-3 border ">
+            <div class="absolute top-5 right-5 group">
+                <img src={{images.menu}} alt="" width="20">
+                <div class="hidden top-0 right-0 pt-10 w-[200px] h-[100px] drop-shadow-xl justify-center items-center absolute group-hover:flex">
+                    <button (click)="logout()" class="bg-white rounded-xl border font-semibold w-full h-full hover:bg-blue-50 custom-transition">Logout</button>
+                </div>
+            </div>
+            <h1 class="font-semibold text-2xl md:text-[45px]">{{adminData?.name}}</h1>
+            <p class="text-gray-500">{{adminData?.email}}</p>
+            <div class="flex justify-around w-full">
+                <div>
+                    <p class="text-wrap text-blue-700 font-semibold text-center">Total Pending</p>
+                    <p class="text-center text-sm md:text-base font-semibold">{{grievanceAdminData.length}}</p>
+                </div>
+                <div>
+                    <p class="text-wrap text-blue-700 font-semibold">Total Updated</p>
+                    <p class="text-center text-sm md:text-base font-semibold">{{grievanceAdminDataUpdated.length}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row-span-1 md:row-span-2 h-full flex flex-row md:flex-col xl:flex-row gap-5">
+            <button routerLink="/admin/manage" class="group w-full h-full border rounded-3xl text-wrap flex justify-center items-center custom-transition bg-blue-50 hover:bg-blue-700 hover:text-white">
+                <p class="font-semibold text-center group-hover:hidden text-xl xl:text-3xl">Manage Grievance</p>
+                <img src={{images.manage}} alt="" width="60" class="hidden group-hover:block">
+            </button>
+            <button routerLink="/admin/updated" class="group w-full h-full border rounded-3xl text-wrap flex justify-center items-center custom-transition bg-blue-50 hover:bg-blue-700 hover:text-white">
+                <p class="font-semibold text-center group-hover:hidden text-xl xl:text-3xl">Updated Grievance</p>
+                <img src={{images.updated}} alt="" width="60" class="hidden  group-hover:block">
+            </button>
+        </div>
+        <div class="rounded-3xl row-span-5 md:row-span-4 col-span-1 md:col-span-2 pb-5 w-full grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="border rounded-3xl">
+                <h1 class="font-semibold text-lg md:text-2xl text-center pt-3 pb-2">Pending Grievances</h1>
+                <ng-container *ngIf="grievanceAdminData.length > 0; else noData">
+                    <div class="grid grid-cols-3 place-items-center font-semibold text-blue-700">
+                        <h3>Grievance ID</h3>
+                        <h3>User Name</h3>
+                        <h3>Created At</h3>
+                    </div>
+                    <div *ngFor="let grievance of grievanceAdminData | slice:0:5" class="px-2">
+                        <div [routerLink]="['/admin/update', grievance?.grievance_id]" class="grid grid-cols-3 place-items-center border text-sm my-1 hover:bg-blue-50 cursor-default rounded-xl">
+                            <p>{{grievance?.grievance_id}}</p>
+                            <p>{{grievance?.user_name}}</p>
+                            <div class="flex flex-col justify-center items-center">
+                                <p>{{grievance.created_at.slice(0,10)}}</p>
+                                <p>{{grievance.created_at.slice(11,16)}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center items-center">
+                        <a routerLink="/admin/manage" class="cursor-pointer text-sm text-blue-600 hover:underline">see more</a>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="border rounded-3xl">
+                <h1 class="font-semibold text-lg md:text-2xl text-center pt-3 pb-2">Updated Grievances</h1>
+                <ng-container *ngIf="grievanceAdminDataUpdated.length > 0; else noData">
+                    <div class="grid grid-cols-3 place-items-center font-semibold text-blue-700">
+                        <h3>Grievance ID</h3>
+                        <h3>User Name</h3>
+                        <h3>Updated At</h3>
+                    </div>
+                    <div *ngFor="let grievance of grievanceAdminDataUpdated | slice:0:5" class="px-2">
+                        <div [routerLink]="['/admin/update', grievance?.grievance_id]" class="grid grid-cols-3 place-items-center border text-sm my-1 hover:bg-blue-50 cursor-default rounded-xl">
+                            <p>{{grievance?.grievance_id}}</p>
+                            <p>{{grievance?.user_name}}</p>
+                            <div class="flex flex-col justify-center items-center">
+                                <p>{{grievance.updated_at.slice(0,10)}}</p>
+                                <p>{{grievance.updated_at.slice(11,16)}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center items-center">
+                        <a routerLink="/admin/updated" class="cursor-pointer text-sm text-blue-600 hover:underline">see more</a>
+                    </div>
+                </ng-container>
+            </div>
+            <ng-template #noData>
+                <div class="text-center py-4 text-gray-600">Nothing here</div>
+            </ng-template>
+        </div>
+    </div>
+</div>

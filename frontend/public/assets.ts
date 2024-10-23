@@ -1,6 +1,7 @@
 
 export const images = {
     back: 'back.svg',
+    back_w: 'back_w.svg',
     profile: 'profile.svg',
     create: 'create.svg',
     delete: 'delete.svg',
@@ -9,6 +10,12 @@ export const images = {
     save: 'save.svg',
     passopen: 'passopen.svg',
     passclose: 'passclose.svg',
+    menu: 'menu.svg',
+    menu_w: 'menu_w.svg',
+    updated: 'updated.svg',
+    manage: 'manage.svg',
+    add: 'add.svg',
+    logout: 'logout.svg',
 };
 
 export const category = [

@@ -5,7 +5,7 @@ import { GrievanceService } from '../../../services/grievance/grievance.service'
 
 interface Grievance {
   grievance_id: string;
-  created_at: string;
+  updated_at: string;
   status: string;
 }
 
@@ -24,7 +24,7 @@ export class ResolvedComponent {
 
   ngOnInit(): void {
     this.loading = true;
-    this.grievanceService.getGrievanceData().subscribe({
+    this.grievanceService.getResolvedGrievanceData().subscribe({
       next: (res:any) => {
         this.grievanceData = res.grievances;
         this.loading = false;

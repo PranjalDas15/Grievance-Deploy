@@ -2,7 +2,6 @@ import { Component, OnInit} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { images } from '../../../../public/assets';
 import { NgIf } from '@angular/common';
-import { Emmiters } from '../../emitters/emitters';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth/auth.service';
@@ -28,16 +27,11 @@ export class NavbarComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    // Emmiters.authEmmiter.subscribe(
-    //   (auth: boolean) => {
-    //     this.authenticated = auth;
-    //   }
-    // )
     this.authService.isAuthenticated().subscribe({
       next: (auth: boolean) => {
         this.authenticated = auth;
       },
-      error: (err) => {
+      error: () => {
         this.toastr.error('Error checking authentication', 'Error')
       }
     })
@@ -48,7 +42,9 @@ export class NavbarComponent implements OnInit{
     this.http.post(`${this.authService.baseUrl()}/api/logout`, {}, {withCredentials: true}).
     subscribe({
       next: (res: any)=> {
-        this.router.navigate(['/login'])
+        this.router.navigate(['/login']).then(()=> {
+          window.location.reload()
+        });
         this.authenticated = false;
         this.toastr.success(res.message)
       }

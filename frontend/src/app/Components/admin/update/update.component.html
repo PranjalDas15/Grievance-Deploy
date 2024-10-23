@@ -1,0 +1,112 @@
+<div class="bg-white h-full flex flex-col px-5 py-5 min-h-[80vh] relative">
+    <h1 class="font-bold text-center py-3 text-2xl">{{grievance?.grievance_id}}</h1>
+    <button (click)="goBack()" class="mx-2 md:mx-10 absolute top-3 left-2">
+        <img src={{images.back}} alt="" width="30" />
+    </button>
+    <div class="min-h-[75vh] md:min-h-[65vh] overflow-y-auto flex flex-col gap-4">
+        <div class=" border rounded-2xl pt-3 px-2 md:px-5">
+            <h2 class="font-semibold text-xl">User Details</h2>
+            <div class="my-3 cursor-default flex flex-col lg:flex-row">
+                <div class="w-full flex flex-col gap-2">
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Name:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.user_name}}</p>
+                    </div>
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Email:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.user_email}}</p>
+                    </div>
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Phone:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.phone}}</p>
+                    </div>
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Consumer Number:</p>
+                        <p class="text-sm md:text-base w-full"><br>{{grievance?.consumer_no}}</p>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Address:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.address}}</p>
+                    </div>
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Pincode:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.pincode}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="border rounded-2xl py-3 px-2 md:px-5 w-full">
+            <h2 class="font-semibold text-xl">Grievance Details</h2>
+            <div class="py-3 cursor-default flex flex-col gap-2">
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Category:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.category}}</p>
+                    </div>
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Detail:</p>
+                        <p class="text-sm md:text-base w-full">{{grievance?.detail}}</p>
+                    </div>
+                    
+                    <div class="flex">
+                        <p class="font-semibold text-sm md:text-base text-wrap  w-[90px] md:w-[100px]">Created At:</p>
+                        <div class="flex gap-2 w-full">
+                            <p class="text-sm md:text-base">{{grievance?.created_at.slice(0,10)}}</p>
+                            <p class="text-sm md:text-base">{{grievance?.created_at.slice(11,16)}}</p>
+                        </div>
+                    </div>
+                    <div class="flex" *ngIf="grievance?.updated_at">
+                        <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Updated At:</p>
+                        <div class="flex gap-2 w-full">
+                            <p class="text-sm md:text-base">{{grievance?.updated_at.slice(0,10)}}</p>
+                            <p class="text-sm md:text-base">{{grievance?.updated_at.slice(11,16)}}</p>
+                        </div>
+                    </div>
+                    <form [formGroup]="form" (submit)="submit()">
+                        <div>
+                            <ng-container *ngIf="isUpdating; else viewModeStatus">
+                                <div class="flex">
+                                    <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Status:</p>
+                                    <select name="status" id="status" formControlName="status" required>
+                                        <option [value]="grievance?.status" selected disabled>{{grievance?.status}}</option>
+                                        <option value="Resolved">Resolved</option>
+                                        <option value="Rejected">Rejected</option>
+                                    </select>
+                                </div>
+                            </ng-container>
+                            <ng-template #viewModeStatus>
+                                <div class="flex">
+                                    <p class="font-semibold text-sm md:text-base text-wrap w-[90px] md:w-[100px]">Status:</p>
+                                    <p class="text-sm md:text-base font-semibold w-full" 
+                                    [ngClass]="{
+                                        'text-yellow-500': grievance?.status === 'Pending',
+                                        'text-green-500': grievance?.status === 'Resolved',
+                                        'text-red-500': grievance?.status === 'Rejected'
+                                      }">{{grievance?.status}}</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <button type="button" (click)="toggleUpdate()" [disabled]="grievance?.status !== 'Pending'" [ngClass]="{
+                            'hidden': isUpdating || grievance?.status !== 'Pending',
+                            'block bg-blue-600 cursor-pointer': grievance?.status === 'Pending'
+                        }" class="bg-blue-600 cursor-pointer custom-transition rounded-lg pl-3 pr-3 py-2 mt-3 text-white hover:pr-8 hover:pl-3 group relative group">
+                            <p>Update</p>
+                            <img
+                                src="{{ images.update }}"
+                                width="20"
+                                alt=""
+                                class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
+                            />
+                        </button>
+                        <div class="flex gap-3 py-2">
+                            <button *ngIf="isUpdating" type="submit" class="bg-green-600 cursor-pointer rounded-lg px-3 py-2 text-white">Submit</button>
+                            <button *ngIf="isUpdating" type="button" class="bg-red-600 cursor-pointer rounded-lg px-3 py-2 text-white" (click)="toggleUpdate()">Cancel</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    
+</div>

@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit{
     .subscribe({next: (res: any) => {
       this.toastr.success(res.message)
       this.authenticated = true; 
-      Emmiters.authEmmiter.emit(true);
       this.router.navigate([''])
     },
     error: (err)=> {

@@ -44,6 +44,7 @@ class LoginView(APIView):
         response =  Response()
         
         response.set_cookie(key='token', value=token, httponly=True, secure=True, samesite='None')
+        # response.set_cookie(key='token', value=token, httponly=True, secure=False)
         response.data = {
             'message': "Login Successful",
             'user': {

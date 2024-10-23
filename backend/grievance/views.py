@@ -127,9 +127,128 @@ class GetGrievanceView(APIView):
                 'category': grievance['category'],
                 'detail': grievance['detail'],
                 'status': grievance['status'],
-                'created_at': grievance['created_at']
+                'created_at': grievance['created_at'],
+                'updated_at': grievance.get('updated_at', None)
+                
             }
             formatted_grievances.append(formatted_grievance)
+
+        return Response({
+            'message': 'Grievances retrieved successfully.',
+            'grievances': formatted_grievances
+        })
+        
+class GetPendingGrievances(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        user_id = payload['id']
+        
+        pending_grievances = list(grievance_collection.find({"user_id": user_id, "status": "Pending"}, {'_id': 0}))
+        
+        formatted_grievances = [
+            {
+                'grievance_id': grievance['grievance_id'],
+                'user_id': str(grievance['user_id']),
+                'user_name': grievance['user_name'],
+                'user_email': grievance['user_email'],
+                'phone': grievance['phone'],
+                'consumer_no': grievance['consumer_no'],
+                'pincode': grievance['pincode'],
+                'address': grievance['address'],
+                'category': grievance['category'],
+                'detail': grievance['detail'],
+                'status': grievance['status'],
+                'created_at': grievance['created_at']
+            }
+            for grievance in pending_grievances
+        ]
+
+        return Response({
+            'message': 'Grievances retrieved successfully.',
+            'grievances': formatted_grievances
+        })
+class GetRejectedGrievances(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        user_id = payload['id']
+        
+        pending_grievances = list(grievance_collection.find({"user_id": user_id, "status": "Rejected"}, {'_id': 0}))
+        
+        formatted_grievances = [
+            {
+                'grievance_id': grievance['grievance_id'],
+                'user_id': str(grievance['user_id']),
+                'user_name': grievance['user_name'],
+                'user_email': grievance['user_email'],
+                'phone': grievance['phone'],
+                'consumer_no': grievance['consumer_no'],
+                'pincode': grievance['pincode'],
+                'address': grievance['address'],
+                'category': grievance['category'],
+                'detail': grievance['detail'],
+                'status': grievance['status'],
+                'created_at': grievance['created_at'],
+                'updated_at': grievance['updated_at']
+            }
+            for grievance in pending_grievances
+        ]
+
+        return Response({
+            'message': 'Grievances retrieved successfully.',
+            'grievances': formatted_grievances
+        })
+class GetResolvedGrievances(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        user_id = payload['id']
+        
+        pending_grievances = list(grievance_collection.find({"user_id": user_id, "status": "Resolved"}, {'_id': 0}))
+        
+        formatted_grievances = [
+            {
+                'grievance_id': grievance['grievance_id'],
+                'user_id': str(grievance['user_id']),
+                'user_name': grievance['user_name'],
+                'user_email': grievance['user_email'],
+                'phone': grievance['phone'],
+                'consumer_no': grievance['consumer_no'],
+                'pincode': grievance['pincode'],
+                'address': grievance['address'],
+                'category': grievance['category'],
+                'detail': grievance['detail'],
+                'status': grievance['status'],
+                'created_at': grievance['created_at'],
+                'updated_at': grievance['updated_at']
+            }
+            for grievance in pending_grievances
+        ]
 
         return Response({
             'message': 'Grievances retrieved successfully.',
@@ -165,7 +284,9 @@ class GetGrievanceByIdView(APIView):
                 'category': grievance['category'],
                 'detail': grievance['detail'],
                 'status': grievance['status'],
-                'created_at': grievance['created_at']
+                'created_at': grievance['created_at'],
+                'updated_at': grievance.get('updated_at', None)
+                
             }
             formatted_grievances.append(formatted_grievance)
 
@@ -276,3 +397,175 @@ class GetGrievanceByIdView(APIView):
             'message': 'Grievance deleted successfully.'
         })
         
+#Admin Views
+        
+class GetGrievanceForAdmin(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        if payload['role'] != 'Admin':
+            raise AuthenticationFailed("Unauthorized User")
+        
+        pending_grievances = list(grievance_collection.find(
+            {"status": "Pending"}, {'_id': 0}
+        ))
+        
+        formatted_grievances = [
+            {
+                'grievance_id': grievance['grievance_id'],
+                'user_id': str(grievance['user_id']),
+                'user_name': grievance['user_name'],
+                'user_email': grievance['user_email'],
+                'phone': grievance['phone'],
+                'consumer_no': grievance['consumer_no'],
+                'pincode': grievance['pincode'],
+                'address': grievance['address'],
+                'category': grievance['category'],
+                'detail': grievance['detail'],
+                'status': grievance['status'],
+                'created_at': grievance['created_at']
+            }
+            for grievance in pending_grievances
+        ]
+
+        return Response({
+            'message': 'Grievances retrieved successfully.',
+            'grievances': formatted_grievances
+        })
+        
+    def put(self, request, grievance_id):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        if payload['role'] != 'Admin':
+            raise AuthenticationFailed("Unauthorized user.")
+        
+        grievance = grievance_collection.find_one({"grievance_id": grievance_id})
+        
+        if not grievance:
+            raise ValidationError("Grievance not found or you are not authorized to update it.")
+        
+        if(grievance['status'] != 'Pending'):
+            raise ValidationError('Grievance Already Updated')
+        
+        status = request.data.get('status', grievance['status'])
+        
+        update_data = {
+            'status': status,
+            'updated_at': datetime.now().isoformat()  
+        }
+
+        try:
+            grievance_collection.update_one({"grievance_id": grievance_id}, {"$set": update_data})
+        except Exception as e:
+            raise Exception(f"Failed to update grievance: {str(e)}")
+
+        return Response({
+            'message': 'Grievance updated successfully.',
+            'grievance': {
+                'grievance_id': grievance_id,
+                'status': status, 
+                'created_at': grievance['created_at'],  
+                'updated_at': datetime.now().isoformat()  
+            }
+        })
+        
+class GetGrievanceByIdAdminView(APIView):
+    def get(self, request, grievance_id):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+        
+        if payload['role'] != 'Admin':
+            raise AuthenticationFailed("Unauthorized user.")
+
+        grievance = grievance_collection.find_one({"grievance_id": grievance_id})
+        if not grievance:
+            return Response({"message": "Grievance not found."}, status=404)
+        
+        formatted_grievance = {
+            'grievance_id': grievance['grievance_id'],
+            'user_id': str(grievance['user_id']),
+            'user_name': grievance['user_name'],
+            'user_email': grievance['user_email'],
+            'phone': grievance['phone'],
+            'consumer_no': grievance['consumer_no'],
+            'pincode': grievance['pincode'],
+            'address': grievance['address'],
+            'category': grievance['category'],
+            'detail': grievance['detail'],
+            'status': grievance['status'],
+            'created_at': grievance['created_at'],
+            'updated_at': grievance.get('updated_at', None)
+        }
+
+        return Response({
+            'message': 'Grievance retrieved successfully.',
+            'grievances': formatted_grievance
+        })
+
+class GetUpdatedGrievanceForAdmin(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        if payload['role'] != 'Admin':
+            raise AuthenticationFailed("Unauthorized User")
+        
+        non_pending_grievances = list(grievance_collection.find(
+            {"status": {"$ne": "Pending"}}, {'_id': 0}
+        ))
+        
+        formatted_grievances = [
+            {
+                'grievance_id': grievance['grievance_id'],
+                'user_id': str(grievance['user_id']),
+                'user_name': grievance['user_name'],
+                'user_email': grievance['user_email'],
+                'phone': grievance['phone'],
+                'consumer_no': grievance['consumer_no'],
+                'pincode': grievance['pincode'],
+                'address': grievance['address'],
+                'category': grievance['category'],
+                'detail': grievance['detail'],
+                'status': grievance['status'],
+                'created_at': grievance['created_at'],
+                'updated_at': grievance['updated_at'],
+            }
+            for grievance in non_pending_grievances
+        ]
+
+        return Response({
+            'message': 'Grievances retrieved successfully.',
+            'grievances': formatted_grievances
+        })
+        
+

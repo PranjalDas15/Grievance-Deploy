@@ -5,7 +5,7 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 
 interface Grievance {
   grievance_id: string;
-  created_at: string;
+  updated_at: string;
   status: string;
 }
 
@@ -24,7 +24,7 @@ export class RejectedComponent implements OnInit{
 
   ngOnInit(): void {
     this.loading = true;
-    this.grievanceService.getGrievanceData().subscribe({
+    this.grievanceService.getRejectedGrievanceData().subscribe({
       next: (res:any) => {
         this.grievanceData = res.grievances;
         this.loading = false;

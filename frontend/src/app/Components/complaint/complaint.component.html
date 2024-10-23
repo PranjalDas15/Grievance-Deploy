@@ -1,126 +1,167 @@
-<div class="w-full min-h-[80vh] py-10 px-5 bg-white">
-  <div class="flex w-full">
-    <button routerLink="/" class="mx-2 md:mx-10">
-      <img src="{{ images.back }}" alt="" width="30" />
+<div class="w-full overflow-y-auto h-full p-5 bg-white md:bg-transparent">
+  <div class="md:bg-white h-full w-full rounded-3xl md:rounded-[50px] relative overflow-hidden" >
+    <button routerLink="/" class="mx-2 md:mx-10 absolute top-5">
+      <img src={{images.back}} alt="" width="30">
     </button>
-  </div>
-  <h1 class="text-center text-3xl font-bold mb-5">
-    {{ grievance?.grievance_id }}
-  </h1>
-  <form [formGroup]="form" (submit)="submit()" class="flex flex-col gap-5 mt-5 mx-5 items-center">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
-      <div class="text-wrap w-full">
-        <h3 class="font-semibold text-lg text-center">Consumer Number</h3>
-        <ng-container *ngIf="isEditing; else viewModeConsumerNo" class="w-full">
-          <input formControlName="consumer_no" type="number" id="phone" name="phone" class="h-10 w-full  px-2 py-1 rounded-lg border" placeholder="Enter your phone number" required>
+    <h1 class="text-center text-3xl font-bold py-5">
+      {{ grievance?.grievance_id }}
+    </h1>
+    <form [formGroup]="form" (submit)="submit()" class="flex flex-col gap-5 mt-5 md:py-3 md:px-5 h-[90%] items-center md:bg-white relative">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full h-[60%] md:h-[35%] border rounded-2xl p-3 overflow-y-auto">
+        <div class="text-wrap w-full">
+          <h3 class="font-semibold text-lg text-center">Consumer Number</h3>
+          <ng-container *ngIf="isEditing; else viewModeConsumerNo" class="w-full">
+            <input formControlName="consumer_no" type="number" id="consumer_no" name="consumer_no" class="h-10 w-full  px-2 py-1 rounded-lg border" placeholder="Enter your phone number" required>
+          </ng-container>
+          <ng-template #viewModeConsumerNo>
+            <p class="text-center">{{ grievance?.consumer_no }}</p>
+          </ng-template>
+        </div>
+        <div class="text-wrap w-full">
+          <h3 class="font-semibold text-lg text-center">Phone Number</h3>
+          <ng-container *ngIf="isEditing; else viewModeConsumerNo" class="w-full">
+            <input formControlName="phone" type="number" id="phone" name="phone" class="h-10 w-full  px-2 py-1 rounded-lg border" placeholder="Enter your phone number" required>
+          </ng-container>
+          <ng-template #viewModePhone>
+            <p class="text-center">{{ grievance?.phone }}</p>
+          </ng-template>
+        </div>
+        <div class="text-wrap w-full">
+          <h3 class="font-semibold text-lg text-center">Grievance Category</h3>
+          <ng-container *ngIf="isEditing; else viewModeCategory" class="w-full">
+            <select class="h-10 px-2 py-1 border rounded-lg w-full" formControlName="category" required>
+              <option value="" disabled selected>Select a category</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </ng-container>
+          <ng-template #viewModeCategory>
+            <p class="text-center w-full">{{ grievance?.category }}</p>
+          </ng-template>
+        </div>
+        <div class="text-wrap" *ngIf="!isEditing">
+          <h3 class="font-semibold text-lg text-center">Status</h3>
+          <p
+            class="text-center font-semibold w-full"
+            [ngClass]="{
+              'text-yellow-500': grievance?.status === 'Pending',
+              'text-green-500': grievance?.status === 'Resolved',
+              'text-red-500': grievance?.status === 'Rejected'
+            }"
+          >
+            {{ grievance?.status }}
+          </p>
+        </div>
+        <div class="text-wrap w-full">
+          <h3 class="font-semibold text-lg text-center">Address</h3>
+          <ng-container *ngIf="isEditing; else viewModeAddress" class="w-full">
+            <textarea formControlName="address" id="address" name="address" rows="5" class="px-2 py-1 rounded-lg border w-full" placeholder="Enter your address" required></textarea>
+          </ng-container>
+          <ng-template #viewModeAddress>
+            <p class="text-center">{{ grievance?.address }}</p>
+          </ng-template>
+        </div>
+        <div class="text-wrap w-full">
+          <h3 class="font-semibold text-lg text-center">Pincode</h3>
+          <ng-container *ngIf="isEditing; else viewModePincode" class="w-full">
+            <input formControlName="pincode" type="number" id="pincode" name="pincode" class="h-10 w-full  px-2 py-1 rounded-lg border" placeholder="Enter your phone number" required>
+          </ng-container>
+          <ng-template #viewModePincode>
+            <p class="text-center">{{ grievance?.pincode }}</p>
+          </ng-template>
+        </div>
+        <div class="text-wrap w-full" *ngIf="!isEditing">
+          <h3 class="font-semibold text-lg text-center">Created at</h3>
+          <p class="text-center">
+            {{ grievance?.created_at.slice(0, 10) }}
+            {{ grievance?.created_at.slice(11, 16) }}
+          </p>
+        </div>
+        <div class="text-wrap w-full" *ngIf="grievance?.updated_at">
+          <h3 class="font-semibold text-lg text-center">Updated at</h3>
+          <p class="text-center">
+            {{ grievance?.updated_at.slice(0, 10) }}
+            {{ grievance?.updated_at.slice(11, 16) }}
+          </p>
+        </div>
+      </div>
+      <div class="text-wrap w-full h-[40%] overflow-y-auto border rounded-2xl p-3">
+        <h3 class="font-semibold text-lg text-center">Grievance Details</h3>
+        <ng-container *ngIf="isEditing; else viewModeDetail" class="w-full">
+          <textarea formControlName="detail" id="detail" name="detail" rows="7" class="px-2 py-1 rounded-lg border w-full" placeholder="Enter your grievance detail" required></textarea>
         </ng-container>
-        <ng-template #viewModeConsumerNo>
-          <p class="text-center">{{ grievance?.consumer_no }}</p>
+        <ng-template #viewModeDetail class="text-wrap text-center">
+          <p class="text-center text-balance">{{ grievance?.detail }}</p>
         </ng-template>
       </div>
-      <div class="text-wrap w-full">
-        <h3 class="font-semibold text-lg text-center">Grievance Category</h3>
-        <ng-container *ngIf="isEditing; else viewModeCategory" class="w-full">
-          <select class="h-10 px-2 py-1 border rounded-lg w-full" formControlName="category" required>
-            <option value="" disabled selected>Select a category</option>
-            <option *ngFor="let category of categories" [value]="category">
-              {{ category }}
-            </option>
-          </select>
-        </ng-container>
-        <ng-template #viewModeCategory>
-          <p class="text-center w-full">{{ grievance?.category }}</p>
-        </ng-template>
-      </div>
-      <div class="text-wrap">
-        <h3 class="font-semibold text-lg text-center">Status</h3>
-        <p
-          class="text-center w-full"
-          [ngClass]="{
-            'text-yellow-500': grievance?.status === 'Pending',
-            'text-green-500': grievance?.status === 'Resolved',
-            'text-red-500': grievance?.status === 'Rejected'
-          }"
+      <div class="flex gap-2" *ngIf="isEditing">
+        <button type="submit"
+          class="bg-green-600 custom-transition rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
         >
-          {{ grievance?.status }}
-        </p>
+          <p class="custom-transition group-hover:-translate-x-2">Save</p>
+          <img
+            src="{{ images.save }}"
+            width="20"
+            alt=""
+            class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
+          />
+        </button>
+        <div
+          (click)="toggleEdit()"
+          class="bg-red-600 custom-transition cursor-pointer rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
+        >
+          <p class="custom-transition group-hover:-translate-x-2">Cancel</p>
+          <img
+            src="{{ images.cancel }}"
+            width="20"
+            alt=""
+            class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
+          />
+        </div>
       </div>
-      <div class="text-wrap w-full">
-        <h3 class="font-semibold text-lg text-center">Address</h3>
-        <ng-container *ngIf="isEditing; else viewModeAddress" class="w-full">
-          <textarea formControlName="address" id="address" name="address" rows="5" class="px-2 py-1 rounded-lg border w-full" placeholder="Enter your address" required></textarea>
-        </ng-container>
-        <ng-template #viewModeAddress>
-          <p class="text-center">{{ grievance?.address }}</p>
-        </ng-template>
+      <div class="flex justify-center gap-2 my-5" >
+        <div
+          (click)="toggleEdit()"
+          [ngClass]="{
+            'hidden': isEditing || grievance?.status !== 'Pending',
+            'block': grievance?.status === 'Pending'}"
+          class="bg-blue-600 cursor-pointer custom-transition rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
+        >
+          <p class="custom-transition group-hover:-translate-x-2">Update</p>
+          <img
+            src="{{ images.update }}"
+            width="20"
+            alt=""
+            class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
+          />
+        </div>
+        <div
+          (click)="toggleDelete()"
+          class="bg-red-600 cursor-pointer custom-transition rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative">
+          <p class="custom-transition group-hover:-translate-x-2">Delete</p>
+          <img
+            src="{{ images.delete }}"
+            width="20"
+            alt=""
+            class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"/>
+        </div>
       </div>
-      <div class="text-wrap w-full">
-        <h3 class="font-semibold text-lg text-center">Created at</h3>
-        <p class="text-center">
-          {{ grievance?.created_at.slice(0, 10) }}
-          {{ grievance?.created_at.slice(11, 16) }}
-        </p>
+
+      <!-- Delete Popup -->
+
+      <div *ngIf="isDeleting" class="absolute top-[20%] bg-white h-[200px] w-[300px] border rounded-3xl drop-shadow-xl">
+        <p class="text-center py-10">Are you sure? </p>
+        <div class="flex w-full justify-center gap-4">
+          <button (click)="delete()" class="border px-3 py-1 md:py-2 md:px-4 rounded-xl custom-transition hover:bg-red-600">
+            Yes
+          </button>
+          <div (click)="toggleDelete()" class="border cursor-pointer px-3 py-1 md:py-2 md:px-4 rounded-xl custom-transition hover:bg-gray-300">
+            No
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="text-wrap w-full">
-      <h3 class="font-semibold text-lg text-center">Grievance Details</h3>
-      <ng-container *ngIf="isEditing; else viewModeDetail" class="w-full">
-        <textarea formControlName="detail" id="detail" name="detail" rows="6" class="px-2 py-1 rounded-lg border w-full" placeholder="Enter your grievance detail" required></textarea>
-      </ng-container>
-      <ng-template #viewModeDetail class="text-wrap">
-        <p class="text-justify">{{ grievance?.detail }}</p>
-      </ng-template>
-    </div>
-    <div class="flex gap-2" *ngIf="isEditing">
-      <button type="submit"
-        class="bg-green-600 custom-transition rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
-      >
-        <p class="custom-transition group-hover:-translate-x-2">Save</p>
-        <img
-          src="{{ images.save }}"
-          width="20"
-          alt=""
-          class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
-        />
-      </button>
-      <div
-        (click)="toggleEdit()"
-        class="bg-red-600 custom-transition cursor-pointer rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
-      >
-        <p class="custom-transition group-hover:-translate-x-2">Cancel</p>
-        <img
-          src="{{ images.cancel }}"
-          width="20"
-          alt=""
-          class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
-        />
-      </div>
-    </div>
-  </form>
-  <div class="flex justify-center gap-2 my-5" *ngIf="!isEditing">
-    <div
-      (click)="toggleEdit()"
-      class="bg-blue-600 cursor-pointer custom-transition rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
-    >
-      <p class="custom-transition group-hover:-translate-x-2">Update</p>
-      <img
-        src="{{ images.update }}"
-        width="20"
-        alt=""
-        class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
-      />
-    </div>
-    <div
-      (click)="delete()"
-      class="bg-red-600 cursor-pointer custom-transition rounded-lg pl-3 pr-3 py-2 text-white hover:px-6 group relative"
-    >
-      <p class="custom-transition group-hover:-translate-x-2">Delete</p>
-      <img
-        src="{{ images.delete }}"
-        width="20"
-        alt=""
-        class="custom-transition absolute top-[10px] right-2 opacity-0 group-hover:opacity-100"
-      />
-    </div>
+    </form>
+    
   </div>
 </div>

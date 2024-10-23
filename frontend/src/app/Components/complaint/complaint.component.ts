@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -22,10 +23,12 @@ export class ComplaintComponent implements OnInit {
   form: FormGroup;
   isEditing = false;
   categories = category;
+  isDeleting = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private location: Location,
     private http: HttpClient,
     private toastr: ToastrService,
     private authService: AuthService,
@@ -72,6 +75,10 @@ export class ComplaintComponent implements OnInit {
     }
   }
 
+  toggleDelete() {
+    this.isDeleting = !this.isDeleting
+  }
+
   submit() {
     if (this.form.valid) {
       this.http.put(`${this.authService.baseUrl()}/api/grievance/update/${this.grievance_id}`, this.form.value, { withCredentials: true })
@@ -101,5 +108,9 @@ export class ComplaintComponent implements OnInit {
         this.toastr.error(err.message, 'Error')
       }
     })
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
