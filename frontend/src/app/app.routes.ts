@@ -15,6 +15,7 @@ import { ManageComponent } from './Components/admin/manage/manage.component';
 import { UpdatedComponent } from './Components/admin/updated/updated.component';
 import { AdminAuthGuard } from './guards/admin.guard';
 import { UpdateComponent } from './Components/admin/update/update.component';
+import { NotificationComponent } from './Components/notification/notification.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,6 +27,10 @@ export const routes: Routes = [
       {
         path: 'new_ticket',
         component: CreateTicketComponent,
+      },
+      {
+        path: 'notifications',
+        component: NotificationComponent,
       },
       {
         path: 'complaint/:grievance_id',

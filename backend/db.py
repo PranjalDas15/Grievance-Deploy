@@ -14,3 +14,4 @@ except Exception as e:
 
 user_collection = db['Users']
 grievance_collection = db['Grievance']
+notification_collection = db['Notifications']

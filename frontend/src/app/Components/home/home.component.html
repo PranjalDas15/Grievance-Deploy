@@ -17,6 +17,16 @@
     </div>
     <div class="md:absolute md:right-10 flex gap-4 justify-center items-center">
       <button
+        class="cursor-pointer opacity-80 hover:opacity-100 relative"
+        *ngIf="authenticated"
+        routerLink="/notifications"
+      >
+        <img src="{{ images.notification }}" alt="" [ngClass]="notificationData.length>0 ? 'custom-animation': ''" class="w-8 md:w-10" />
+        <div *ngIf="notificationData.length > 0" class="absolute top-0 right-0">
+          <div class="h-[9px] w-[9px] rounded-full bg-red-500 animate-pulse opacity-100"></div>
+        </div>
+      </button>
+      <button
         class="cursor-pointer opacity-80 hover:opacity-100"
         *ngIf="authenticated"
         routerLink="/new_ticket"

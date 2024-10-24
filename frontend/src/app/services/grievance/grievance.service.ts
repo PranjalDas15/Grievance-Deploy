@@ -23,6 +23,15 @@ export class GrievanceService {
   getRejectedGrievanceData(): Observable<any> {
       return this.http.get(`${this.authServices.baseUrl()}/api/grievance/get/rejected`, { withCredentials: true });
     }
+
+  getNewNotification(): Observable<any> {
+    return this.http.get(`${this.authServices.baseUrl()}/api/grievance/notification`, { withCredentials: true });
+  }
+
+  updateNotificationStatus(grievance_id: string) {
+    return this.http.put(`${this.authServices.baseUrl()}/api/grievance/notification/update/${grievance_id}`, { is_read: true }, { withCredentials: true });
+  }
+
   
   getAdminGrievancePendingData(): Observable<any> {
     return this.http.get(`${this.authServices.baseUrl()}/api/grievance/admin/getall`, { withCredentials: true });

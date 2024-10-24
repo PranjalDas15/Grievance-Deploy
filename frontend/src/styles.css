@@ -49,4 +49,38 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield; 
 }
+.custom-animation {
+    animation: animation 2s infinite;
+}
+
+@keyframes animation {
+    0% {
+        transform: rotate(0); 
+    }
+    30% {
+        transform: rotate(0); 
+    }
+    40% {
+        transform-origin: top center;
+        transform: rotate(5deg); 
+    }
+    45% {
+        transform-origin: top center;
+        transform: rotate(-5deg); 
+    }
+    55% {
+        transform-origin: top center;
+        transform: rotate(5deg); 
+    }
+    60% {
+        transform-origin: top center;
+        transform: rotate(-5deg); 
+    }
+    70% {
+        transform: rotate(0); 
+    }
+    100% {
+        transform: rotate(0); 
+    }
+}
 

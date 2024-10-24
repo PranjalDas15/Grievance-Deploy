@@ -20,6 +20,7 @@ export const images = {
     loading: 'loading.svg',
     loading_blue: 'loading_blue.svg',
     nodata: 'nodata.png',
+    notification: 'notification.svg',
 };
 
 export const category = [

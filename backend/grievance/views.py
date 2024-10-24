@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from db import grievance_collection, user_collection
+from db import grievance_collection, user_collection, notification_collection
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.response import Response
 import jwt
@@ -11,7 +11,7 @@ class CreateGrievanceView(APIView):
     def generate_grievance_id(self):
         now = datetime.now()
         date_str = now.strftime('%d%m') 
-        time_str = now.strftime('%H%M')  
+        time_str = now.strftime('%M%S')  
         custom_grievance_id = f"TOK-{date_str}{time_str}"
         return custom_grievance_id
     
@@ -134,7 +134,7 @@ class GetGrievanceView(APIView):
             formatted_grievances.append(formatted_grievance)
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'All grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
         
@@ -173,9 +173,10 @@ class GetPendingGrievances(APIView):
         ]
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'Pending grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
+        
 class GetRejectedGrievances(APIView):
     def get(self, request):
         token = request.COOKIES.get('token')
@@ -212,7 +213,7 @@ class GetRejectedGrievances(APIView):
         ]
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'Rejected grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
 class GetResolvedGrievances(APIView):
@@ -251,7 +252,7 @@ class GetResolvedGrievances(APIView):
         ]
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'Resolved grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
 
@@ -291,7 +292,7 @@ class GetGrievanceByIdView(APIView):
             formatted_grievances.append(formatted_grievance)
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'All my grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
     
@@ -396,7 +397,89 @@ class GetGrievanceByIdView(APIView):
         return Response({
             'message': 'Grievance deleted successfully.'
         })
+
+class GetGrievanceNotification(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
         
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        user_id = payload['id']
+        print(f"Token user ID: {user_id}" )
+
+        notifications = list(notification_collection.find({"user_id": user_id, "is_read": False}, {'_id': 0}))
+        
+        if not notifications:
+            return Response({
+                'message': 'No notifications found.',
+                'notifications': [] 
+            })
+        
+        formatted_notifications = [
+            {
+                'user_id': notification['user_id'],
+                'grievance_id': notification['grievance_id'],
+                'message': notification['message'],
+                'is_read': notification['is_read'],
+                # 'updated_at': notification['updated_at'],
+                'created_at': notification['created_at']
+            } 
+            for notification in notifications
+        ]
+
+        return Response({
+            'message': 'Notifications retrieved successfully.', 
+            'notifications': formatted_notifications 
+        })
+    
+    def put(self, request, grievance_id):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        user_id = payload['id']
+        
+        notification = notification_collection.find_one({"grievance_id": grievance_id, "user_id": user_id})
+        
+        if not notification:
+            raise ValidationError("Notification not found or you are not authorized to update it.")
+        
+        if notification['is_read']:
+            raise ValidationError('Notification already read.')
+    
+        
+        update_data = {
+            'is_read': True,
+        }
+
+        try:
+            notification_collection.update_one({"grievance_id": grievance_id, "user_id": user_id}, {"$set": update_data})
+        except Exception as e:
+            raise Exception(f"Failed to update grievance: {str(e)}")
+
+        return Response({
+            'message': 'Notification has been read.',
+            'notification': {
+                'user_id': notification['user_id'],  
+                'grievance_id': notification['grievance_id'],  
+                'is_read': True,
+                'updated_at': datetime.now().isoformat(),
+                'created_at':notification['created_at'] 
+            }
+        })
+    
 #Admin Views
         
 class GetGrievanceForAdmin(APIView):
@@ -437,7 +520,7 @@ class GetGrievanceForAdmin(APIView):
         ]
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'All grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
         
@@ -474,6 +557,19 @@ class GetGrievanceForAdmin(APIView):
             grievance_collection.update_one({"grievance_id": grievance_id}, {"$set": update_data})
         except Exception as e:
             raise Exception(f"Failed to update grievance: {str(e)}")
+        
+        notification_data = {
+            'user_id': grievance['user_id'],  
+            'grievance_id': grievance_id,
+            'message': f"Your grievance with ID {grievance_id} has been '{status}'.",
+            'is_read': False,
+            'created_at': datetime.now().isoformat(),
+        }
+
+        try:
+            notification_collection.insert_one(notification_data)
+        except Exception as e:
+            raise Exception(f"Failed to create notification: {str(e)}")
 
         return Response({
             'message': 'Grievance updated successfully.',
@@ -482,7 +578,16 @@ class GetGrievanceForAdmin(APIView):
                 'status': status, 
                 'created_at': grievance['created_at'],  
                 'updated_at': datetime.now().isoformat()  
+            },
+            'notification': {
+                'user_id': grievance['user_id'],  
+                'grievance_id': notification_data['grievance_id'],
+                'message': notification_data['message'],
+                'is_read': notification_data['is_read'],
+                'updated_at': None,
+                'created_at': notification_data['created_at']
             }
+            
         })
         
 class GetGrievanceByIdAdminView(APIView):
@@ -564,7 +669,7 @@ class GetUpdatedGrievanceForAdmin(APIView):
         ]
 
         return Response({
-            'message': 'Grievances retrieved successfully.',
+            'message': 'Updated grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
         
