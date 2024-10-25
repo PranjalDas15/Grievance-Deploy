@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import CreateGrievanceView, GetGrievanceView, GetPendingGrievances, GetResolvedGrievances, GetRejectedGrievances, GetGrievanceNotification, GetGrievanceByIdView, GetGrievanceForAdmin, GetUpdatedGrievanceForAdmin, GetGrievanceByIdAdminView
+from .views import CreateGrievanceView, SearchGrievanceByIdView, GetGrievanceView, GetPendingGrievances, GetResolvedGrievances, GetRejectedGrievances, GetGrievanceNotification, GetGrievanceByIdView, GetGrievanceForAdmin, GetUpdatedGrievanceForAdmin, GetGrievanceByIdAdminView
 
 urlpatterns = [
     # Grievance for user
     path('create', CreateGrievanceView.as_view()),
     path('get', GetGrievanceView.as_view()),
+    path('search', SearchGrievanceByIdView.as_view()),
     path('get/pending', GetPendingGrievances.as_view()),
     path('get/resolved', GetResolvedGrievances.as_view()),
     path('get/rejected', GetRejectedGrievances.as_view()),

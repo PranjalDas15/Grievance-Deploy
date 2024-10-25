@@ -255,6 +255,54 @@ class GetResolvedGrievances(APIView):
             'message': 'Resolved grievances retrieved successfully.',
             'grievances': formatted_grievances
         })
+        
+class SearchGrievanceByIdView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('token')
+        
+        if not token:
+            raise AuthenticationFailed("Unauthenticated user.")
+        
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated user.')
+
+        grievance_id = request.query_params.get('grievance_id')
+        if not grievance_id:
+            return Response({"message": "Please provide a grievance ID to search."}, status=400)
+        
+        user_id = payload['id']
+        grievances = list(grievance_collection.find({"grievance_id": grievance_id, "user_id": user_id}))
+        
+        formatted_grievances = []
+        for grievance in grievances:
+            formatted_grievance = {
+                'grievance_id': grievance['grievance_id'],
+                'user_id': str(grievance['user_id']),
+                'user_name': grievance['user_name'],
+                'user_email': grievance['user_email'],
+                'phone': grievance['phone'],
+                'consumer_no': grievance['consumer_no'],
+                'pincode': grievance['pincode'],
+                'address': grievance['address'],
+                'category': grievance['category'],
+                'detail': grievance['detail'],
+                'status': grievance['status'],
+                'created_at': grievance['created_at'],
+                'updated_at': grievance.get('updated_at', None)
+            }
+            formatted_grievances.append(formatted_grievance)
+
+        if formatted_grievances:
+            return Response({
+                'message': 'Grievance retrieved successfully.',
+                'grievances': formatted_grievances
+            })
+        else:
+            return Response({
+                'message': 'Please enter a valid Grievance ID.'
+            }, status=404)
 
 class GetGrievanceByIdView(APIView):
     def get(self, request, grievance_id):
@@ -421,17 +469,21 @@ class GetGrievanceNotification(APIView):
                 'notifications': [] 
             })
         
-        formatted_notifications = [
-            {
+        formatted_notifications = []
+        for notification in notifications:
+            grievance_id = notification['grievance_id']
+            grievance = grievance_collection.find_one({"grievance_id": grievance_id}) 
+            
+            status = grievance['status']
+
+            formatted_notifications.append({
                 'user_id': notification['user_id'],
                 'grievance_id': notification['grievance_id'],
                 'message': notification['message'],
+                'status': status, 
                 'is_read': notification['is_read'],
-                # 'updated_at': notification['updated_at'],
                 'created_at': notification['created_at']
-            } 
-            for notification in notifications
-        ]
+            })
 
         return Response({
             'message': 'Notifications retrieved successfully.', 
@@ -473,7 +525,7 @@ class GetGrievanceNotification(APIView):
             'message': 'Notification has been read.',
             'notification': {
                 'user_id': notification['user_id'],  
-                'grievance_id': notification['grievance_id'],  
+                'grievance_id': notification['grievance_id'], 
                 'is_read': True,
                 'updated_at': datetime.now().isoformat(),
                 'created_at':notification['created_at'] 
@@ -562,6 +614,7 @@ class GetGrievanceForAdmin(APIView):
             'user_id': grievance['user_id'],  
             'grievance_id': grievance_id,
             'message': f"Your grievance with ID {grievance_id} has been '{status}'.",
+            'status': grievance['status'],
             'is_read': False,
             'created_at': datetime.now().isoformat(),
         }
@@ -583,6 +636,7 @@ class GetGrievanceForAdmin(APIView):
                 'user_id': grievance['user_id'],  
                 'grievance_id': notification_data['grievance_id'],
                 'message': notification_data['message'],
+                'status': notification_data['status'], 
                 'is_read': notification_data['is_read'],
                 'updated_at': None,
                 'created_at': notification_data['created_at']

@@ -21,6 +21,9 @@ export const images = {
     loading_blue: 'loading_blue.svg',
     nodata: 'nodata.png',
     notification: 'notification.svg',
+    search: 'search.svg',
+    created_at: 'created_at.svg',
+    updated_at: 'updated_at.svg',
 };
 
 export const category = [

@@ -1,5 +1,10 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MONGO_URI = str(os.getenv('MONGO_URI'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +14,7 @@ SECRET_KEY = 'django-insecure-91$1s5(&eu#3qbr&$%=jzkwoaq61e!5di48*6+z-d4qm6ozsnm
 
 ALLOWED_HOSTS = ['grievance-deploy.onrender.com', 'localhost', '127.0.0.1']
 
-DEBUG = False
+DEBUG = True
 
 
 # Application definition

@@ -1,12 +1,8 @@
-# import os
 from pymongo import MongoClient
-# from dotenv import load_dotenv
+from backend.backend.settings import MONGO_URI
 
-# load_dotenv()
-
-connection_uri = "mongodb+srv://pranjal080015:F4hlysFvW2W7Om9x@grievancedb.oh7pt.mongodb.net/?retryWrites=true&w=majority&appName=GrievanceDb"
 try:
-    client = MongoClient(connection_uri)
+    client = MongoClient(MONGO_URI)
     db = client['GrievanceDb']
     print("Connected to MongoDB")
 except Exception as e:

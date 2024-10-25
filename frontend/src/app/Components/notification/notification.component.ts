@@ -1,14 +1,14 @@
 import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { images } from '../../../../public/assets';
 import { GrievanceService } from '../../services/grievance/grievance.service';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Notification {
   grievance_id: string;
   message: string;
+  status: string;
   is_read: string;
   created_at: string;
 }
@@ -28,8 +28,8 @@ export class NotificationComponent implements OnInit{
 
   constructor(
     private grievanceService: GrievanceService,
-    private authService: AuthService,
-    private http: HttpClient,
+    private toastr: ToastrService,
+    private router: Router
   ){}
 
   ngOnInit(): void {  
@@ -53,6 +53,7 @@ export class NotificationComponent implements OnInit{
     this.grievanceService.updateNotificationStatus(grievance_id).subscribe({
       next: () => {
         this.notificationData = this.notificationData.filter(notification => notification.grievance_id !== grievance_id);
+        this.toastr.success('Marked as read.')
       },
       error: (err) => {
         console.error('Error marking notification as read:', err);

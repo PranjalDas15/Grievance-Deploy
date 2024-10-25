@@ -13,7 +13,8 @@
           <ng-container *ngIf="notificationData.length > 0; else noData">
             <div *ngFor="let notification of notificationData" class="flex flex-col gap-3 bg-white">
               <div
-                class="text-center hover:bg-blue-50 my-1 py-3 border rounded-xl mx-4 cursor-pointer"
+                class="text-center my-1 py-3 border rounded-xl mx-4 cursor-pointer"
+                [ngClass]="notification?.status == 'Resolved'? 'bg-green-300 hover:bg-green-400' : 'bg-red-300 hover:bg-red-400'"
                 (click)="markAsRead(notification.grievance_id)"
                 >
                 <p class="w-full font-semibold text-wrap text-center">

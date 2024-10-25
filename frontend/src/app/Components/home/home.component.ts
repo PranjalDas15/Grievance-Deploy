@@ -12,6 +12,7 @@ import { Emmiters } from '../../emitters/emitters';
 import { AuthService } from '../../services/auth/auth.service';
 import { images } from '../../../../public/assets';
 import { GrievanceService } from '../../services/grievance/grievance.service';
+import { delay } from 'rxjs';
 
 interface Notification {
   grievance_id: string;
@@ -38,7 +39,10 @@ export class HomeComponent implements OnInit{
   userData: any;
   authenticated = false;
   images = images;
+  searchResult: any = null;
+  grievanceId: string = '';
   loading = false;
+  button_loading = false;
   notificationData : Notification[] = [];
 
   constructor(
@@ -93,6 +97,41 @@ export class HomeComponent implements OnInit{
         this.loading = false;
       }
     });
+  }
+
+  onInputChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.grievanceId = inputElement.value.trim();
+  }
+
+  onSearch() {
+    if (this.grievanceId.trim() === '') {
+      this.toastr.warning('Please enter a grievance ID', 'Warning');
+      return;
+    } 
+    this.button_loading = true;
+    this.http.get(`${this.authService.baseUrl()}/api/grievance/search?grievance_id=${this.grievanceId}`, { withCredentials: true })
+      .subscribe({
+        next: (res: any) => {
+          this.searchResult = res.grievances[0] || null;
+          this.button_loading = false;
+          if (this.searchResult) {
+            this.router.navigate(['/complaint', this.searchResult.grievance_id]);
+          } else {
+            this.toastr.error('Grievance not found', 'Error');
+          }
+        },
+        error: (err) => {
+          this.toastr.error(err.error.message || 'Error retrieving grievance', 'Error');
+          this.button_loading = false;
+        }
+      });
+  }
+
+  onSelectGrievance() {
+    if (this.searchResult) {
+      this.router.navigate(['/complaint', this.searchResult.grievance_id]);
+    }
   }
 
   logout(): void{
