@@ -121,6 +121,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [str(os.getenv('FRONTEND_1')), str(os.getenv('FRONTEND_2'))
-]
+# CORS_ALLOWED_ORIGINS = [str(os.getenv('FRONTEND_1')), str(os.getenv('FRONTEND_2'))]
